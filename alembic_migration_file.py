@@ -1,4 +1,4 @@
-"""added lat,long,name to each location field
+"""
 
 Revision ID: 10c1ac184f2c
 Revises: 24687dde15e5
@@ -16,8 +16,8 @@ from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
 from sqlalchemy.dialects import postgresql
-from babel.database.tag_types import GEO_TAGS
-from babel.database.models import Location
+from database.tag_types import GEO_TAGS
+from database.models import Location
 from sqlalchemy.orm import sessionmaker
 
 
