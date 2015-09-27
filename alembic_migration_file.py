@@ -1,14 +1,51 @@
+########### TEST DATA  ###########
+
+# GEO_TAGS = {
+# 'mock': {
+#     'mock-1': {
+#         'name': 'Mock 1',
+#         'city': 'London',
+#         'country': 'UK',
+#         'region': 'Europe',
+#         'lat':  51.507351,
+#         'long': -0.127758,
+#     },
+#     'mock-2': {
+#         'name': 'Mock 2',
+#         'city': 'Paris',
+#         'country': 'France',
+#         'region': 'Europe',
+#         'lat':  48.85661,
+#         'long': 2.35222,
+#         }
+#     }
+# }
+
+# class Location():
+#     __tablename__ = 'locations'
+
+#     name = Column(String, nullable=False)
+#     city = Column(String, nullable=False)
+#     country = Column(String, nullable=False)
+#     region = Column(String, nullable=False)
+#     latitude = Column(Float, nullable=True)
+#     longitude = Column(Float, nullable=True)
+#     provider_tag = Column(String, nullable=False)
+#     provider = Column(Enum(name='provider', *PROVIDER_TAGS), nullable=False)
+
+########### TEST DATA  ###########
+
 """
 
 Revision ID: 10c1ac184f2c
 Revises: 24687dde15e5
-Create Date: 2015-09-21 15:29:40.827143
+Create Date: 2015-09-21 12:00:40.812345
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '10c1ac184f2c'
-down_revision = '1807a6c21763'
+revision = '90c1ac184fed4'
+down_revision = '18q7a6c21fr4'
 branch_labels = None
 depends_on = None
 
@@ -16,8 +53,8 @@ from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
 from sqlalchemy.dialects import postgresql
-from database.tag_types import GEO_TAGS
-from database.models import Location
+from tag_types import GEO_TAGS
+from models import Location
 from sqlalchemy.orm import sessionmaker
 
 
@@ -69,7 +106,8 @@ def upgrade():
 
     items = []
     locations = session.query(Location).all()
-
+    
+    # Only insert tags from GEO_TAGS if they don't already exist in Location table
     for key in GEO_TAGS:
         for region, values in GEO_TAGS[key].iteritems():
             found = False
@@ -79,7 +117,7 @@ def upgrade():
             if not found:
                 values['provider'] = key
                 values['provider_tag'] = region
-                items.append(values)
+                items.append(values) 
     op.bulk_insert(Location.__table__, items)
     session.close()
     ### end Alembic commands ###
